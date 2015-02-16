@@ -4,6 +4,8 @@ define(function(require, exports, module) {
     var Transform     = require('famous/core/Transform');
     var StateModifier = require('famous/modifiers/StateModifier');
 
+    var ImageSurface = require('famous/surfaces/ImageSurface');
+
     function StripView() {
         View.apply(this, arguments);
 
@@ -16,7 +18,8 @@ define(function(require, exports, module) {
     StripView.DEFAULT_OPTIONS = {
         // stripbackground size
         width: 320,
-        height: 55
+        height: 55,
+        angle: -0.2
     };
 
     // creating the strip view: 
@@ -29,11 +32,20 @@ define(function(require, exports, module) {
         var background = new Surface({
             size: [this.options.width, this.options.height],
             properties: {
-                backgroundColor: '#222'
+                backgroundColor: '#222',
+                boxShadow: '0 0 1px rgba(0,0,0,1)'
             }
         });
 
-        this.add(background);
+        var rotateModifier = new StateModifier({
+            transform: Transform.rotateZ(this.options.angle)
+        });
+
+        var skewModifier = new StateModifier({
+            transform: Transform.skew(0, 0, this.options.angle)
+        });
+
+        this.add(rotateModifier).add(skewModifier).add(background);
     }
 
 
