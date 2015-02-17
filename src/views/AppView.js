@@ -7,6 +7,7 @@ define(function(require, exports, module) {
 
     var PageView = require('views/PageView');
     var MenuView = require('views/MenuView');
+    var StripData = require('data/StripData');
 
     function AppView() {
         View.apply(this, arguments);
@@ -16,6 +17,7 @@ define(function(require, exports, module) {
         _createPageView.call(this);
         _setListeners.call(this);
         _createMenuView.call(this);
+
     }
 
     AppView.prototype = Object.create(View.prototype);
@@ -59,7 +61,8 @@ define(function(require, exports, module) {
 
     // create a menu view
     function _createMenuView () {
-        this.menuView = new MenuView();
+        this.menuView = new MenuView({stripData : StripData});
+        
         var menuModifier = new StateModifier({
             trasform: Transform.behind
         });
