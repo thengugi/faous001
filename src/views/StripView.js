@@ -10,6 +10,8 @@ define(function(require, exports, module) {
         View.apply(this, arguments);
 
         _createBackground.call(this);
+        _createIcon.call(this);
+        _createTitle.call(this);
     }
 
     StripView.prototype = Object.create(View.prototype);
@@ -19,7 +21,11 @@ define(function(require, exports, module) {
         // stripbackground size
         width: 320,
         height: 55,
-        angle: -0.2
+        angle: -0.2,
+        iconSize: 32,
+        iconUrl: 'img/strip-icons/famous.png',
+        title: 'Famo.us',
+        fontSize: 25
     };
 
     // creating the strip view: 
@@ -48,6 +54,41 @@ define(function(require, exports, module) {
         this.add(rotateModifier).add(skewModifier).add(background);
     }
 
+    // creating the icon
+    function _createIcon () {
+        var iconSurface = new ImageSurface({
+            size: [this.options.iconSize, this.options.iconSize],
+            content: 'this.options.iconUrl',
+            properties: {
+                pointerEvents: 'none'
+            }
+        });
+
+        var iconModifier = new StateModifier({
+            // place the icon in the proper position
+            transform: Transform.translate(24, 2, 0)    
+        });
+
+        this.add(iconModifier).add(iconSurface);
+    }
+
+    function _createTitle () {
+        var titleSurface = new Surface({
+            size: [true, true],
+            content:  this.options.title,
+            properties: {
+                color: '#fff',
+                fontSize: this.options.fontSize + 'px',
+                pointerEvents: 'none'
+            }
+        });
+
+        var titleModifier = new StateModifier({
+            transform: Transform.thenMove(Transform.rotateZ(this.options.angle), [75, -5, 0])
+        });
+        
+        this.add(titleModifier).add(titleSurface);
+    }
 
     module.exports = StripView;
 });
