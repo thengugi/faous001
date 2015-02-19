@@ -8,15 +8,19 @@ define(function(require, exports, module) {
     var PageView = require('views/PageView');
     var MenuView = require('views/MenuView');
     var StripData = require('data/StripData');
+    var GenericSync =  require('famous/inputs/GenericSync');
+    var TouchSync = require('famous/inputs/TouchSync');
+    var MouseSync = require('famous/inputs/MouseSync');
 
     function AppView() {
         View.apply(this, arguments);
 
         this.menuToggle = false;
-        // call a helper function
+        
         _createPageView.call(this);
         _setListeners.call(this);
         _createMenuView.call(this);
+        _handleSwipe.call(this);
 
     }
 
@@ -40,6 +44,21 @@ define(function(require, exports, module) {
 
     function _setListeners () {
         this.pageView.on('menuToggle', this.toggleMenu.bind(this));
+    }
+
+    // adding the swpe and touch events using geneic sync
+    function _handleSwipe () {
+        var sync = new GenericSync(
+            ['mosue', 'swipe'],
+            {direction: GenericSync.DIRECTION_X}
+        );
+
+        this.pageView.pipe(sync);
+
+        sync.on('update', function (data) {
+           this.pageViewPos += data.delta;
+           this.pageModifier.setTransform(Transform.translate(this.pageViewPos, 0, 0)); 
+        }.bind(this));
     }
 
     AppView.prototype.toggleMenu = function () {
