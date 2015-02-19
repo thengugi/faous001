@@ -61,7 +61,7 @@ define(function(require, exports, module) {
 
     // create a menu view
     function _createMenuView () {
-        this.menuView = new MenuView({stripData : StripData});
+        this.menuView = new MenuView({ stripData: StripData });
         
         var menuModifier = new StateModifier({
             trasform: Transform.behind
